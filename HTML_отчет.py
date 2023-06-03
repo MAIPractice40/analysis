@@ -97,8 +97,7 @@ app.layout = html.Div(
                     children=[
                         html.Div(children="Выберите профиль / размер арматуры", className="menu-title"),
                         dcc.Dropdown(id='steelsize_opts',
-                            options=steelsize_opts,
-                            value=steelsize[0]
+                            options=steelsize_opts
                             ),
                     ],
                 ),
@@ -186,13 +185,13 @@ app.layout = html.Div(
 ], style={'columnCount': 2})
 
 #От выброра марки будут зависить размеры,которые можно выброть, как в датасете
-@app.callback(Output('steelsize_opts', 'options'),
+@app.callback([Output('steelsize_opts', 'options'),
+              Output('steelsize_opts', 'value')],
              [Input('steelgrade_opts', 'value')])
 def update_dropdown(X):
     steelsize=data.xs(X).index.drop_duplicates().tolist()
     steelsize_opts=[{'label' : i, 'value' : i} for i in steelsize]
-    return steelsize_opts
-
+    return steelsize_opts,steelsize[0]
 
 #От выбранных пунктов в чек-листе будет зависить отображенные на странице данные 
 @app.callback([Output('attention', 'children'),
